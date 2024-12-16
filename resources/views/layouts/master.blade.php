@@ -45,16 +45,34 @@
               </div>
               <!-- /.modal-dialog -->
           </div>
+
+          @if(session('success'))
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  {{ session('success') }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+          @endif
+
+          @if(session('error'))
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  {{ session('error') }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+          @endif
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
+  {{-- <footer class="main-footer">
       <div class="float-right d-none d-sm-block">
           <b>&copy; 2024 Universitas Muhammadiyah Magelang</b>
       </div>
-  </footer>
+  </footer> --}}
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
@@ -65,5 +83,11 @@
 <!-- ./wrapper -->
 @include('layouts.script')
 @yield('scripts')
+<script>
+    function deleteData(url) {
+        $('#modal-hapus').modal('show');
+        $('#form-delete').attr('action', url);
+    }
+</script>
 </body>
 </html>

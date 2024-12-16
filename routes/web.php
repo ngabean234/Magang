@@ -29,6 +29,7 @@ use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PresensiController;
+use App\Http\Controllers\CategoryGalleryController;
 
 Route::get('/', function () {
     return redirect('login');
@@ -73,13 +74,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/galeri/details/{id}', [GalleryController::class, 'details'])->name('galeri.details');
     Route::post('/galeri/autocomplete', [GalleryController::class, 'livesearch'])->name('galeri.autocomplete');
     Route::get('/galeri/search', [GalleryController::class, 'search'])->name('galeri.search');
+    Route::delete('galeris/{id}', [GalleryController::class, 'destroy'])->name('galeris.destroy');
+    Route::get('/galeri/category/{slug}', [GalleryController::class, 'showCategory'])->name('galeri.category-gallery');
 
     //about
     Route::get('about', [AboutController::class, 'index']);
-
-    //sumbang
-    //Route::get('sumbang',[SumbangController::class, 'index']);
-    //Route::post('sumbang/add/store',[SumbangController::class, 'store']);
 
     //chat
     Route::get('chat', [ChatController::class, 'index']);
@@ -117,8 +116,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('review/delete/{id}', [ReviewController::class, 'delete']);
     Route::post('balas/{post}/comment', [ReviewController::class, 'store'])->name('balas.review.store');
 
-    //presensi
-    Route::post('/presensi', [PresensiController::class, 'store'])->name('presensi.store');
+    // Routes untuk kategori galeri
+    Route::get('kategory galeri', [CategoryGalleryController::class, 'index'])->name('category-gallery.index');
+    Route::get('kategory galeri/create', [CategoryGalleryController::class, 'create'])->name('category-gallery.create');
+    Route::post('kategory galeri', [CategoryGalleryController::class, 'store'])->name('category-gallery.store');
+    Route::get('kategory galeri/{id}/edit', [CategoryGalleryController::class, 'edit'])->name('category-gallery.edit');
+    Route::put('kategory galeri/{id}', [CategoryGalleryController::class, 'update'])->name('category-gallery.update');
+    Route::delete('kategory galeri/{id}', [CategoryGalleryController::class, 'destroy'])->name('category-gallery.destroy');
+
+    Route::resource('category-gallery', CategoryGalleryController::class);
 });
 
 Route::get('/home', function () {

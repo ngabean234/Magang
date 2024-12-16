@@ -74,7 +74,7 @@
                                     <textarea class="textarea @error('ringkasan') is-invalid @enderror"
                                         placeholder="Place some text here" name="ringkasan"
                                         style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-                                         {{ old('ringkasan') }}</textarea>
+                                        {{ old('ringkasan') }}</textarea>
                                     @error('ringkasan')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -114,6 +114,9 @@
                                     <center>
                                         <p>Image Preview</p>
                                     </center>
+                                    <small class="form-text text-muted">
+                                        Ukuran Cover Buku Max 10MB (jpg/png)
+                                    </small>
                                     <hr>
                                 </div>
                                 <div class="form-group">
@@ -121,12 +124,15 @@
                                     <input id="file_buku" type="file"
                                         class="form-control @error('file_buku') is-invalid @enderror" name="file_buku" accept=".pdf"
                                         value="{{ old('file_buku') }}" required autocomplete="off">
-                                
+
                                     @error('file_buku')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>*masukan file PDF</strong>
                                     </span>
                                     @enderror
+                                    <small class="form-text text-muted">
+                                        Ukuran File Buku (PDF) Max 20MB
+                                    </small>
                                 </div>
                                 <hr>
                                 <div class="form-group" style="margin-top: -15px">
@@ -141,7 +147,7 @@
                                 <hr>
                                 <button type="submit" class="btn btn-success btn-block"><i class="fa fa-save"> Simpan</i></button>
                                 <br>
-                                <p>*Pastikan untuk mengisi semua form dengan benar.</p>
+                                <p>* Pastikan untuk mengisi semua kolom yang diperlukan.</p>
                             </div>
                         </div>
                     </div>

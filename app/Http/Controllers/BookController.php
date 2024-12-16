@@ -16,14 +16,14 @@ class BookController extends Controller
 {
     public function index()
     {
-        $title = 'Data Buku';
-        $data = Book::orderBy('created_at', 'asc')->get();
-        return view('book.index', compact('title', 'data'));
+        $title = 'Daftar Buku';
+        $books = Book::orderBy('created_at', 'asc')->get();
+        return view('book.index', compact('title', 'books'));
     }
 
     public function add()
     {
-        $title = 'Tambah data buku';
+        $title = 'Tambah Daftar buku';
         $category = Category::all();
         return view('book.add', compact('title', 'category'));
     }
@@ -35,7 +35,7 @@ class BookController extends Controller
             'judul' => 'required',
             'ringkasan' => 'required',
             'cover' => 'required|image|max:10240',  // Validasi cover harus gambar dan maksimal 10MB
-            'file_buku' => 'required|mimes:pdf|max:10240',  // Validasi file PDF dan maksimal 10MB
+            'file_buku' => 'required|mimes:pdf|max:20480',  // Validasi file PDF dan maksimal 20MB
         ]);
 
         // Membuat objek data buku baru
@@ -81,14 +81,8 @@ class BookController extends Controller
 
     public function details($slug)
     {
-        $book = Book::where('slug', $slug)->first();
+        $book = Book::where('slug', $slug)->firstOrFail();
         $title = 'Detail Buku';
-
-        $postkey = 'post_' . $book->id;
-        if (!Session::has($postkey)) {
-            $book->increment('view_count');
-            Session::put($postkey, 1);
-        }
 
         $comment = Comment::all();
         return view('book.details', compact('book', 'title', 'comment'));
@@ -96,7 +90,11 @@ class BookController extends Controller
 
     public function read($slug)
     {
-        $book = Book::where('slug', $slug)->first();
+        $book = Book::where('slug', $slug)->firstOrFail();
+
+        // Increment view count setiap kali "Baca Sekarang" diakses
+        $book->increment('view_count');
+
         return view('book.read', compact('book'));
     }
 
@@ -113,8 +111,8 @@ class BookController extends Controller
         $request->validate([
             'judul' => 'required',
             'ringkasan' => 'required',
-            'cover' => 'nullable|image|max:10240',  // Validasi cover opsional
-            'file_buku' => 'nullable|mimes:pdf|max:10240',  // Validasi file PDF opsional
+            'cover' => 'nullable|image|max:10240',  // Validasi cover
+            'file_buku' => 'nullable|mimes:pdf|max:20480',  // Validasi file PDF
         ]);
 
         $data = Book::findOrFail($id);
@@ -178,21 +176,26 @@ class BookController extends Controller
     {
         try {
             $book = Book::findOrFail($id);
+            
             // Hapus file cover jika ada
-            if ($book->cover && Storage::exists('public/cover/' . $book->cover)) {
-                Storage::delete('public/cover/' . $book->cover);
+            if ($book->cover && file_exists(public_path('cover/' . $book->cover))) {
+                unlink(public_path('cover/' . $book->cover));
             }
 
-            // Hapus file PDF jika ada
-            if ($book->file_path && Storage::exists('public/filebook/' . $book->file_path)) {
-                Storage::delete('public/filebook/' . $book->file_path);
+            // Hapus file PDF buku jika ada
+            if ($book->file_path && file_exists(public_path('filebook/' . $book->file_path))) {
+                unlink(public_path('filebook/' . $book->file_path));
             }
+
+            // Hapus data dari database
             $book->delete();
-            session()->flash('sukses', 'Data berhasil dihapus!');
+            
+            session()->flash('sukses', 'Data buku berhasil dihapus!');
+            return redirect()->back();
+            
         } catch (\Exception $e) {
-            session()->flash('gagal', 'Terjadi kesalahan: ' . $e->getMessage());
+            session()->flash('error', 'Gagal menghapus buku: ' . $e->getMessage());
+            return redirect()->back();
         }
-
-        return redirect()->back();
     }
 }

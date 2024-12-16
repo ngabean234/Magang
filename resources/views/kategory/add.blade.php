@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Tambah Kategori</h4>
+                <h4 class="modal-title">Tambah Kategori Buku</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -27,6 +27,7 @@
                             <label for=""> Gambar Logo</label>
                             <input type="file" name="photo" class="form-control @error('photo') is-invalid @enderror"
                                 value="{{ old('photo') }}">
+                            <small class="text-muted">Ukuran Gambar Max 10MB (jpg/png)</small>
 
                             @error('photo')
                             <span class="invalid-feedback" role="alert">
@@ -35,7 +36,6 @@
                             @enderror
                         </div>
                         <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                 </form>

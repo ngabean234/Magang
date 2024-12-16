@@ -30,9 +30,12 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for=""> Gambar Logo</label>
-                            <input type="file" name="photo" class="form-control @error('photo') is-invalid @enderror"
-                                value="{{ old('photo') }}">
+                            <label for=""> Gambar Logo Saat Ini</label>
+                            <div class="mb-2">
+                                <img src="{{ url('category', $dt->photo) }}" width="100px" alt="Logo Kategori">
+                            </div>
+                            <input type="file" name="photo" class="form-control @error('photo') is-invalid @enderror">
+                            <small class="text-muted">Biarkan kosong jika tidak ingin mengubah Gambar (jpg/png) dan Max 10MB</small>
 
                             @error('photo')
                             <span class="invalid-feedback" role="alert">

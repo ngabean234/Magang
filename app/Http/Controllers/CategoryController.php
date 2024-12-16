@@ -11,16 +11,16 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $title = 'Tambah Kategori';
+        $title = 'Kategori Buku';
         $data = Category::all();
-        return view('kategory.index', compact('title','data'));
+        return view('kategory.index', compact('title', 'data'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'photo' => 'required|max:10124'
+            'name' => 'required|string|max:25',  // Tambahkan validasi untuk name max 25
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         $data = new Category();
@@ -44,16 +44,16 @@ class CategoryController extends Controller
 
     public function edit($id)
     {
-        $title = 'Edit Kategori';
+        $title = 'Edit Kategori Buku';
         $dt = Category::find($id);
-        return view('kategory.edit', compact('title','dt'));
+        return view('kategory.edit', compact('title', 'dt'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required',
-            'photo' => 'required|mimes:png,jpg,jpeg|max:10124'
+            'photo' => 'nullable|image|max:10124'
         ]);
 
         $data = Category::find($id);
@@ -63,12 +63,15 @@ class CategoryController extends Controller
         $file = $request->file('photo');
 
         if ($file) {
+            if ($data->photo && file_exists(public_path('category/' . $data->photo))) {
+                unlink(public_path('category/' . $data->photo));
+            }
+
             $nama_gambar = $file->getClientOriginalName();
             $file->move('category', $nama_gambar);
             $data->photo = $nama_gambar;
         }
 
-        //dd($data);
         $data->save();
 
         session()->flash('sukses', 'Data Kategori berhasil diubah !');
@@ -84,20 +87,30 @@ class CategoryController extends Controller
         }]);
         $title = "Kategori : $category->name";
         $kategori = Category::all();
-        return view('category', compact('category', 'title','kategori'));
+        return view('category', compact('category', 'title', 'kategori'));
     }
 
     public function delete($id)
     {
         $category = Category::find($id);
-        try
-        {
+
+        // Cek apakah kategori masih digunakan oleh buku
+        $booksCount = Book::where('category_id', $id)->count();
+        if ($booksCount > 0) {
+            session()->flash('gagal', 'Gagal menghapus kategori karena masih digunakan oleh Buku.');
+            return redirect()->back();
+        }
+
+        try {
+            // Hapus file foto jika ada
+            if ($category->photo && file_exists(public_path('category/' . $category->photo))) {
+                unlink(public_path('category/' . $category->photo));
+            }
+
             $category->delete();
-            session()->flash('sukses', 'Data berhasil dihapus !');
-            
-        } catch(\Exception $e)
-        {
-            session()->flash('gagal', 'Data masih terhubung dengan post');
+            session()->flash('sukses', 'Data berhasil dihapus!');
+        } catch (\Exception $e) {
+            session()->flash('gagal', 'Terjadi kesalahan saat menghapus data.');
         }
 
         return redirect()->back();

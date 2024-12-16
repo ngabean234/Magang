@@ -19,9 +19,7 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                                 <i class="icon fas fa-info"></i>
-                                Note : Jangan delete data kategori selama kategori dipakai untuk post buku, silahkan edit /
-                                ubah jika perlu dan bisa di delete jika sudah tidak terhubung dengan post buku (untuk
-                                mencegah error saat menampilkan data buku)
+                                Note : Jangan menghapus kategori yang masih digunakan di Buku untuk menghindari error pada tampilan Buku.
                             </div>
                         </div>
                     </div>
@@ -65,15 +63,6 @@
                                             </tr>
                                         @endforeach
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama</th>
-                                            <th>Logo</th>
-                                            <th>Dibuat</th>
-                                            <th>action</th>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -87,4 +76,37 @@
     @else
         @include('layouts.404')
     @endif
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $('.btn-hapus').click(function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            
+            $('#modal-hapus').modal('show');
+            $('#modal-hapus').find('form').attr('action', url);
+        });
+
+        @if(session('sukses'))
+            Swal.fire({
+                icon: 'success',
+                text: '{{ session('sukses') }}',
+                timer: 3000, // waktu dalam milidetik
+                showConfirmButton: false
+            });
+        @endif
+
+        @if(session('gagal'))
+            Swal.fire({
+                icon: 'error',
+                text: '{{ session('gagal') }}',
+                timer: 3000, // waktu dalam milidetik
+                showConfirmButton: false
+            });
+        @endif
+    });
+</script>
 @endsection
