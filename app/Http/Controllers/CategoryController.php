@@ -19,7 +19,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:25',  // Tambahkan validasi untuk name max 25
+            'name' => 'required|string',  // Tambahkan validasi untuk name max 25
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 

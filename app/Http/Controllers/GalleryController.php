@@ -33,7 +33,7 @@ class GalleryController extends Controller
             'description' => 'required',
             'date_taken' => 'required|date',
             'location' => 'required',
-            'image' => 'required|image|max:2048',
+            'image' => 'required|image|max:10240',
             'category_gallery_id' => 'required|exists:category_galleries,id',
         ]);
 
@@ -77,7 +77,7 @@ class GalleryController extends Controller
             'description' => 'required',
             'date_taken' => 'required|date',
             'location' => 'required',
-            'image' => 'image|max:2048',
+            'image' => 'image|max:10240',
             'category_gallery_id' => 'required|exists:category_galleries,id',
         ]);
 
@@ -124,7 +124,7 @@ class GalleryController extends Controller
 
             foreach ($data as $row) {
                 $output .= '
-            <img src="' . asset($row->image_path) . '" height="50" width="40" style="object-fit: cover;"/> 
+            <img src="' . asset($row->image_path) . '" height="50" width="40" style="object-fit: cover;"/>
             <a style="font-size: 16px" href="' . route('galeri.details', $row->id) . '">' . $row->title . '</a>
             <br>
             <small><i class="fa fa-camera"></i> ' . $row->author . ' - <i class="fa fa-map-marker"></i> ' . $row->location . '</small>
@@ -198,7 +198,7 @@ class GalleryController extends Controller
             foreach ($data as $row) {
                 $output .= '
             <li class="list-group-item link-class">
-                <img src="' . asset($row->image_path) . '" height="50" width="40" style="object-fit: cover;"/> 
+                <img src="' . asset($row->image_path) . '" height="50" width="40" style="object-fit: cover;"/>
                 <a style="font-size: 16px" href="' . route('galeri.details', $row->id) . '">' . $row->title . '</a>
                 <br>
                 <small><i class="fa fa-camera"></i> ' . $row->author . ' - <i class="fa fa-map-marker"></i> ' . $row->location . '</small>
